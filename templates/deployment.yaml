@@ -30,6 +30,24 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-admin
                 key: password
+          - name: DB_HOST
+            value: {{ include "mariadb.primary.fullname" .Subcharts.mariadb }}
+          - name: DB_PORT
+            value: {{ coalesce .Values.mariadb.primary.service.ports.mysql .Values.mariadb.primary.service.port | quote }}
+          - name: MARIADB_DATABASE
+            value: {{ .Values.mariadb.auth.database | quote }}
+          - name: MARIADB_USER
+            value: {{ .Values.mariadb.auth.username | quote }}
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
+                key: mariadb-root-password
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
+                key: mariadb-password
         volumeMounts:
         - name: gromox-services-volume
           mountPath: /home/gromox-services
