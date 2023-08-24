@@ -6,7 +6,7 @@ metadata:
   labels:
     app: {{ .Release.Name }}-admin
 spec:
-  replicas: {{ .Values.deployment.admin.replicas }}
+  replicas: {{ .Values.admin.replicas }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-admin
