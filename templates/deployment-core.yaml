@@ -74,6 +74,9 @@ spec:
           mountPath: /var/lib/gromox/user
         - name: domain-data
           mountPath: /var/lib/gromox/domain
+        - name: antispam-override
+          mountPath: /etc/grommunio-antispam
+          subPath: rspamd.conf.local.override
       volumes:
       - name: certificates-volume
         secret:
@@ -92,6 +95,9 @@ spec:
       - name: nginx-volume
         configMap:
           name: {{ .Release.Name }}-nginx
+      - name: antispam-override
+        configMap:
+          name: {{ .Release.Name }}-antispam-override
       - name: user-data
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-user-data
