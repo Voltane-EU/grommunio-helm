@@ -1,6 +1,6 @@
 image:
-  repository: olam1k0/gromox-core
-  tag: v0.0.1
+  repository: grommunio/gromox-core
+  tag: 0.3-opensuse-leap-15-4
 
 deployment:
   replicas: 1
