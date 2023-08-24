@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Grommunio
 name: grommunio
-version: 0.0.7
+version: 0.0.9
 appVersion: 0.0.1
 keywords:
   - grommunio
