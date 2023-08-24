@@ -1,0 +1,9 @@
+image:
+  repository: olam1k0/gromox-core
+  tag: v0.0.1
+
+deployment:
+  replicas: 1
+
+config:
+  fqdn: example.com

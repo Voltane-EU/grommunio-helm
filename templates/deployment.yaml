@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-core
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-db
+        - configMapRef:
+            name: {{ .Release.Name }}-general
+        env:
+          - name: ADMIN_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-admin
+                key: password
+        volumeMounts:
+        - name: gromox-services-volume
+          mountPath: /home/gromox-services
+        - name: admin-plugins-volume
+          mountPath: /home/plugins
+        - name: admin-links-volume
+          mountPath: /home/links
+      volumes:
+      - name: admin-plugins-volume
+        configMap:
+          name: {{ .Release.Name }}-admin-plugins
+          defaultMode: 0777 
+      - name: admin-links-volume
+        configMap:
+          name: {{ .Release.Name }}-admin-links
+          defaultMode: 0777
+      - name: gromox-services-volume
+        configMap:
+          name: {{ .Release.Name }}-services

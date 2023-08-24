@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-admin-plugins
+  namespace: {{ .Release.Namespace }}
+data:
+  conf.yaml: |
+    sync:
+      connection:
+        host: redis-service
+    options:
+        antispamUrl: http://localhost:11334

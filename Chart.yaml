@@ -1,0 +1,9 @@
+description: Grommunio
+name: grommunio
+version: 0.0.1
+appVersion: 0.0.1
+keywords:
+  - grommunio
+sources:
+  - https://github.com/grommunio/gromox-kubernetes
+icon: https://grommunio.com/wp-content/uploads/2021/01/grommunio_favicon-triangle_light_512.png
