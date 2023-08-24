@@ -4,6 +4,7 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-core
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: https
     {{- toYaml .Values.core.ingress.annotations | nindent 6 }}
 spec:
   rules:
