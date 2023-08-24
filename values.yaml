@@ -10,3 +10,6 @@ config:
 
 mariadb:
   enabled: true
+  auth:
+    database: grommunio
+    username: grommunio
