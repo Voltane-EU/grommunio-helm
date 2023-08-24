@@ -1,12 +1,24 @@
-image:
-  repository: olam1k0/gromox-core
-  tag: v0.0.1
+core:
+  image:
+    repository: grommunio/gromox-core
+    tag: 0.3-opensuse-leap-15-4
+  replicas: 1
 
-deployment:
+admin:
+  image:
+    repository: grommunio/grommunio-admin
+    tag: 0.1-opensuse-leap-15-4
   replicas: 1
 
 config:
   fqdn: example.com
+
+persistence:
+  storageClass: null
+  user:
+    storage: 10Gi
+  domain:
+    storage: 10Gi
 
 mariadb:
   enabled: true

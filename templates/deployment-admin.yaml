@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-admin
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-admin
+spec:
+  replicas: {{ .Values.deployment.admin.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-admin
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-admin
+    spec:
+      initContainers:
+      - name: init-wait
+        image: alpine
+        command:
+          - "sh"
+          - "-c"
+          - |
+            for i in $(seq 1 300);
+              do nc -zvw1 {{ include "mariadb.primary.fullname" .Subcharts.mariadb }} {{ coalesce .Values.mariadb.primary.service.ports.mysql .Values.mariadb.primary.service.port }} && exit 0 || sleep 3;
+            done;
+            exit 1
+      containers:
+      - name: {{ .Release.Name }}-admin
+        image: {{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag }}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-db
+        - configMapRef:
+            name: {{ .Release.Name }}-general
+        env:
+          - name: ADMIN_PASS
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-admin
+                key: password
+          - name: DB_HOST
+            value: {{ include "mariadb.primary.fullname" .Subcharts.mariadb }}
+          - name: DB_PORT
+            value: {{ coalesce .Values.mariadb.primary.service.ports.mysql .Values.mariadb.primary.service.port | quote }}
+          - name: MARIADB_DATABASE
+            value: {{ .Values.mariadb.auth.database | quote }}
+          - name: MARIADB_USER
+            value: {{ .Values.mariadb.auth.username | quote }}
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
+                key: mariadb-root-password
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
+                key: mariadb-password
+        volumeMounts:
+        - name: certificates-volume
+          mountPath: /home/certificates
+        - name: gromox-services-volume
+          mountPath: /home/gromox-services
+        - name: admin-plugins-volume
+          mountPath: /home/plugins
+        - name: admin-links-volume
+          mountPath: /home/links
+        - name: nginx-volume
+          mountPath: /home/nginx
+        - name: user-data
+          mountPath: /var/lib/gromox/user
+        - name: domain-data
+          mountPath: /var/lib/gromox/domain
+      volumes:
+      - name: certificates-volume
+        secret:
+          secretName: {{ .Release.Name }}-cert-tls
+      - name: admin-plugins-volume
+        configMap:
+          name: {{ .Release.Name }}-admin-plugins
+          defaultMode: 0777 
+      - name: admin-links-volume
+        configMap:
+          name: {{ .Release.Name }}-admin-links
+          defaultMode: 0777
+      - name: gromox-services-volume
+        configMap:
+          name: {{ .Release.Name }}-services
+      - name: nginx-volume
+        configMap:
+          name: {{ .Release.Name }}-nginx
+      - name: user-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-user-data
+      - name: domain-data
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-domain-data
