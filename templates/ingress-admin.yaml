@@ -5,7 +5,9 @@ metadata:
   name: {{ .Release.Name }}-admin
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: https
+    {{- if .Values.admin.ingress.annotations }}
     {{- toYaml .Values.admin.ingress.annotations | nindent 6 }}
+    {{- end }}
 spec:
   rules:
     - host: {{ .Values.admin.ingress.host }}
