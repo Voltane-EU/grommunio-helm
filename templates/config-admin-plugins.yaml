@@ -7,6 +7,6 @@ data:
   conf.yaml: |
     sync:
       connection:
-        host: redis-service
+        host: http://grommunio-core:6379
     options:
-        antispamUrl: http://localhost:11334
+        antispamUrl: http://grommunio-core:11334

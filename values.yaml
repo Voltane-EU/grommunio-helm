@@ -3,12 +3,18 @@ core:
     repository: grommunio/gromox-core
     tag: 0.3-opensuse-leap-15-4
   replicas: 1
+  ingress:
+    enabled: false
+    host: example.com
 
 admin:
   image:
     repository: grommunio/grommunio-admin
     tag: 0.1-opensuse-leap-15-4
   replicas: 1
+  ingress:
+    enabled: false
+    host: example.com
 
 config:
   fqdn: example.com
