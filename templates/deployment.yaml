@@ -76,4 +76,4 @@ spec:
           name: {{ .Release.Name }}-services
       - name: nginx-volume
         configMap:
-          name: nginx-config
+          name: {{ .Release.Name }}-nginx
