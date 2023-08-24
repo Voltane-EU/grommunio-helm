@@ -23,4 +23,4 @@ data:
     pop3_private_key_path=/home/certificates/tls.key
     pop3_force_stls=true
   smtp.cfg: |
-    listen_port = 24
+    listen_port = 25

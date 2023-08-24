@@ -49,6 +49,8 @@ spec:
                 name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
                 key: mariadb-password
         volumeMounts:
+        - name: ssl-volume
+          mountPath: /home/certificates
         - name: gromox-services-volume
           mountPath: /home/gromox-services
         - name: admin-plugins-volume
@@ -56,6 +58,9 @@ spec:
         - name: admin-links-volume
           mountPath: /home/links
       volumes:
+      - name: ssl-volume
+        secret:
+          secretName: {{ .Release.Name }}-cert-tls
       - name: admin-plugins-volume
         configMap:
           name: {{ .Release.Name }}-admin-plugins

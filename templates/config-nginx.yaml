@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-nginx
+  namespace: {{ .Release.Namespace }}
+data:
+  ssl_certificate.conf: |
+    ssl_certificate /home/certificates/tls.crt;
+    ssl_certificate_key /home/certificates/tls.key;
