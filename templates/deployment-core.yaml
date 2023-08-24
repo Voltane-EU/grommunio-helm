@@ -75,7 +75,7 @@ spec:
         - name: domain-data
           mountPath: /var/lib/gromox/domain
         - name: antispam-override
-          mountPath: /etc/grommunio-antispam
+          mountPath: /etc/grommunio-antispam/rspamd.conf.local.override
           subPath: rspamd.conf.local.override
       volumes:
       - name: certificates-volume
